@@ -13,6 +13,7 @@ const figure = document.createElement("figure")
 gallerie.appendChild(figure)
 const img = document.createElement("img")
 img.src = apiWorks[i].imageUrl
+img.alt = apiWorks[i].title
 figure.appendChild(img)
 const title = document.createElement("figcaption")
 title.innerText = apiWorks[i].title
