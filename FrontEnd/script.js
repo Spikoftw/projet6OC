@@ -1,11 +1,14 @@
+// Recupération des items de l'API
 const reponse = await fetch("http://localhost:5678/api/works");
 const apiWorks = await reponse.json();
 console.log(apiWorks);
+// Récupération des categories de l'API
 const reponseCategories = await fetch("http://localhost:5678/api/categories");
 const apiCategories = await reponseCategories.json();
 
 const gallerie = document.querySelector(".gallery");
 
+// Génération des items par défaut de la gallerie
 for (let i = 0; i < apiWorks.length; i++) {
   const figure = document.createElement("figure");
   const img = document.createElement("img");
@@ -23,6 +26,7 @@ for (let i = 0; i < apiWorks.length; i++) {
   figure.appendChild(title);
 }
 
+// Fonction de mise à jour de l'affichage de la gallerie
 const affichageGallerie = (itemsCategorie) => {
   const gallerie = document.querySelector(".gallery");
   while (gallerie.firstChild) {
@@ -47,6 +51,7 @@ const affichageGallerie = (itemsCategorie) => {
   }
 };
 
+// Creation des boutons de filtres par catégories
 const divCategories = document.querySelector(".categories-buttons");
 const boutons = {};
 
@@ -63,6 +68,7 @@ for (let index = 0; index < apiCategories.length; index++) {
 
 const boutonTous = document.querySelector(".id0");
 
+// AddEventListener des boutons de filtres par catégorie
 boutonTous.addEventListener("click", () => {
   affichageGallerie(apiWorks);
 });
