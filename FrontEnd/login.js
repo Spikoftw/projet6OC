@@ -7,6 +7,7 @@ loginForm.addEventListener("submit", async (e) => {
 
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+  const errorMessage = document.getElementById("errorMessage");
 
   const data = {
     email: email,
@@ -36,5 +37,18 @@ loginForm.addEventListener("submit", async (e) => {
   } else {
     // Authentification échouée
     console.log("Erreur d'authentification");
+    errorMessage.innerText =
+      "La combinaison email et mot de passe est incorrecte.";
   }
 });
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+emailInput.addEventListener("input", clearErrorMessage);
+passwordInput.addEventListener("input", clearErrorMessage);
+loginForm.addEventListener("submit", clearErrorMessage);
+
+function clearErrorMessage() {
+  errorMessage.innerText = "";
+}
