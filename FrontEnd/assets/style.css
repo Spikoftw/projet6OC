@@ -133,6 +133,7 @@ body {
   margin: auto;
   font-family: "Work Sans";
   font-size: 14px;
+  background: #FFFEF8;
 }
 header {
   display: flex;
@@ -156,6 +157,11 @@ h1 > span {
   font-family: "Work Sans";
   font-size: 10px;
   letter-spacing: 0.1em;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
 }
 
 h2 {
@@ -231,6 +237,13 @@ li:hover {
 	color: #FFF;
 	cursor: pointer;
 }
+
+.filter-btn.button-active {
+	/* Styles pour le bouton actif */
+	background-color: #1D6154;
+	color: #FFF;
+  }
+
 .gallery {
   width: 100%;
   display: grid;
@@ -273,6 +286,19 @@ li:hover {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
+.forgetpassword {
+	text-decoration: none;
+	text-align: center;
+	color: #3D3D3D;
+font-family: Work Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+text-decoration-line: underline;
+padding-bottom: 355px;
+}
+
 input[type="submit"] {
   font-family: "Syne";
   font-weight: 700;
@@ -288,4 +314,17 @@ footer nav ul {
   display: flex;
   justify-content: flex-end;
   margin: 2em;
+}
+
+
+/* Page de login */
+
+.header-loginpage {
+	color: #000;
+text-align: center;
+font-family: Work Sans;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
 }

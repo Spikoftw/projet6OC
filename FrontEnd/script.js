@@ -70,32 +70,54 @@ const boutonTous = document.querySelector(".id0");
 
 // AddEventListener des boutons de filtres par catégorie
 boutonTous.addEventListener("click", () => {
+  const ancienBoutonActif = document.querySelector(".button-active");
+  if (ancienBoutonActif) {
+    ancienBoutonActif.classList.remove("button-active");
+  }
   affichageGallerie(apiWorks);
+
+  boutonTous.classList.add("button-active");
 });
 
 const boutonObjets = document.querySelector(".id1");
 
 boutonObjets.addEventListener("click", function () {
+  const ancienBoutonActif = document.querySelector(".button-active");
+  if (ancienBoutonActif) {
+    ancienBoutonActif.classList.remove("button-active");
+  }
+
   const objets = apiWorks.filter(function (apiWorks) {
     return apiWorks.categoryId === 1;
   });
   affichageGallerie(objets);
+  boutonObjets.classList.add("button-active");
 });
 
 const boutonAppartements = document.querySelector(".id2");
 
 boutonAppartements.addEventListener("click", function () {
+  const ancienBoutonActif = document.querySelector(".button-active");
+  if (ancienBoutonActif) {
+    ancienBoutonActif.classList.remove("button-active");
+  }
   const Appartements = apiWorks.filter(function (apiWorks) {
     return apiWorks.categoryId === 2;
   });
   affichageGallerie(Appartements);
+  boutonAppartements.classList.add("button-active");
 });
 
 const boutonHotelsRestaurants = document.querySelector(".id3");
 
 boutonHotelsRestaurants.addEventListener("click", function () {
+  const ancienBoutonActif = document.querySelector(".button-active");
+  if (ancienBoutonActif) {
+    ancienBoutonActif.classList.remove("button-active");
+  }
   const hotelsRestos = apiWorks.filter(function (apiWorks) {
     return apiWorks.categoryId === 3;
   });
   affichageGallerie(hotelsRestos);
+  boutonHotelsRestaurants.classList.add("button-active");
 });
