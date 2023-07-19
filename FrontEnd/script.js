@@ -7,6 +7,7 @@ const reponseCategories = await fetch("http://localhost:5678/api/categories");
 const apiCategories = await reponseCategories.json();
 
 const gallerie = document.querySelector(".gallery");
+const modalWorks = document.querySelector(".modal-works");
 
 // Génération des items par défaut de la gallerie
 for (let i = 0; i < apiWorks.length; i++) {
@@ -15,6 +16,7 @@ for (let i = 0; i < apiWorks.length; i++) {
   const title = document.createElement("figcaption");
 
   gallerie.appendChild(figure);
+  // modalWorks.appendChild(figure);
 
   img.src = apiWorks[i].imageUrl;
   img.alt = apiWorks[i].title;
@@ -24,6 +26,27 @@ for (let i = 0; i < apiWorks.length; i++) {
   title.innerText = apiWorks[i].title;
 
   figure.appendChild(title);
+}
+// Generation des items pour la modal
+for (let i = 0; i < apiWorks.length; i++) {
+  const figure = document.createElement("figure");
+  const img = document.createElement("img");
+  const title = document.createElement("figcaption");
+  const trashIcon = document.createElement("i");
+  figure.innerHTML = `<i class="trashicon fa-solid fa-trash-can"></i>`;
+  console.log(trashIcon);
+  modalWorks.appendChild(figure);
+
+  img.src = apiWorks[i].imageUrl;
+  img.alt = apiWorks[i].title;
+
+  figure.appendChild(img);
+
+  title.innerText = "éditer";
+
+  figure.appendChild(title);
+
+  img.appendChild(trashIcon);
 }
 
 // Fonction de mise à jour de l'affichage de la gallerie
@@ -120,4 +143,41 @@ boutonHotelsRestaurants.addEventListener("click", function () {
   });
   affichageGallerie(hotelsRestos);
   boutonHotelsRestaurants.classList.add("button-active");
+});
+
+const isLogged = Boolean(localStorage.getItem("token"));
+if (isLogged) {
+  document.querySelector(".login-btn").classList.add("hidden");
+  document.querySelector(".categories-buttons").classList.add("hidden");
+  document.querySelector(".gallery").classList.add("margintop");
+} else {
+  document.querySelector(".logout-btn").classList.add("hidden");
+  document.querySelector(".admin").classList.add("hidden");
+  document.querySelector(".portfolio-modifier").classList.add("hidden");
+  document.querySelector(".categories-buttons").classList.remove("hidden");
+  document.querySelector(".gallery").classList.remove("margintop");
+}
+
+document.querySelector(".logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("token");
+  location.reload();
+});
+
+document.querySelector(".btn-show-modal").addEventListener("click", () => {
+  document.querySelector(".modal").classList.add("show");
+  document.querySelector("body").style.overflow = "hidden";
+});
+
+document.querySelector(".btn-close-modal").addEventListener("click", () => {
+  document.querySelector(".modal").classList.remove("show");
+  document.querySelector("body").style.overflow = "auto";
+});
+
+document.querySelector(".modal").addEventListener("click", () => {
+  document.querySelector(".modal").classList.remove("show");
+  document.querySelector("body").style.overflow = "auto";
+});
+
+document.querySelector(".modal-wrapper").addEventListener("click", (e) => {
+  e.stopPropagation();
 });

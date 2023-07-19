@@ -129,8 +129,8 @@ table {
 }
 /** end reset css**/
 body {
-  max-width: 1140px;
-  margin: auto;
+  /* max-width: 1140px;
+  margin: auto; */
   font-family: "Work Sans";
   font-size: 14px;
   background: #FFFEF8;
@@ -327,4 +327,198 @@ font-size: 16px;
 font-style: normal;
 font-weight: 600;
 line-height: normal;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal .modal-wrapper {
+  background-color: white;
+  border: 2px solid #1D6154;
+  position: absolute;
+  padding: 30px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  width: 60%;
+}
+
+.modal-wrapper h3 {
+  margin-bottom: 46px;
+}
+
+.modal-wrapper hr {
+  margin-bottom: 36px;
+}
+
+.btn-primary {
+  font-family: "Syne";
+  font-weight: 700;
+  color: white;
+  background-color: #1d6154;
+  margin: 2em auto;
+  text-align: center;
+  border-radius: 60px;
+  border: none;
+  padding: 10px 49px;
+}
+
+.modal .content {
+  position: relative;
+    padding-top: 20px;
+    font-size: 26px;
+    text-align: center;
+    padding: 70px;
+}
+
+.modal .btn-close-modal {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: none;
+  border: none;
+  font-size: 24px;
+}
+
+.modal figure {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.modal-works {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
+}
+
+.modal figure img {
+  width: 100%;
+}
+
+.modal figure figcaption {
+  font-size: 12px;
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-delete-gallery {
+  background: transparent;
+  border: none;
+  color: #D65353;
+  font-size: 14px;
+  font-family: "Syne";
+}
+
+.admin {
+  background-color: #000;
+  width: 100%;
+  height: 59px;
+}
+
+.btn-admin-mode-edition {
+  color: #FFF;
+  font-family: "Work Sans";
+  font-size: 16px;
+  padding-right: 21px;
+}
+
+.btn-publish {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  background-color: #FFF;
+  border-radius: 60px;
+  padding: 11px 23px;
+  font-family: "Work Sans";
+  height: 20%;
+}
+
+.admin-wrapper {
+  height: 100%;
+    margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+}
+
+.btn-show-modal {
+color: #000;
+font-family: "Work Sans";
+font-size: 14px;
+background: transparent;
+border: none;
+padding-left: 31px;
+cursor: pointer;
+}
+
+.mesprojets {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  padding-left: 41%;
+}
+
+.logout-btn button{
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.margintop {
+  margin-top: 92px;
+}
+
+.main-container {
+  max-width: 1140px;
+    margin: auto;
+    font-family: "Work Sans";
+    font-size: 14px;
+    background: #FFFEF8;
+}
+
+.trashicon {
+position: absolute;
+padding-top: 5px;
+padding-right: 3px;
+    padding-left: 2px;
+font-size: 12px;
+top: 8px;
+right: 5px;
+color: white;
+background-color: #000;
+width: 17px;
+height: 17px;
+}
+
+figure i {
+  height: 11px;
+  width: 9px;
 }
