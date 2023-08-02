@@ -22,7 +22,7 @@ loginForm.addEventListener("submit", async (e) => {
     body: JSON.stringify(data),
   });
 
-  if (response.ok) {
+  if (response.status === 200) {
     const responseData = await response.json();
 
     const userId = responseData.userId;
