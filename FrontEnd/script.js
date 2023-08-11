@@ -1,184 +1,123 @@
 const token = localStorage.getItem("token");
 const apiPath = `http://localhost:5678/api/`
 
+const logout = () => {
+  localStorage.removeItem("token");
+  window.location = "/login.html";
+}
+
 const fetchWorks = async () => {
   const response = await fetch(`${apiPath}works`);
   return response.json();
 }
 
-const addWork = body => fetch(`${apiPath}works`, {
-  method: "POST",
-  body,
-  headers: {
-    "Authorization": `Bearer ${token}`, // Inclure le token dans l'en-tête d'autorisation
-  },
-})
+const fetchCategories = async () => {
+  const response = await fetch(`${apiPath}categories`);
+  return response.json();
+}
 
-const deleteWork = idWork => fetch(`${apiPath}works/${idWork}`, {
-  method: "DELETE",
-  headers: {
-    "Authorization": `Bearer ${token}`,
-  },
-})
+const addWork = async body => {
+  if (!token) {
+    logout()
+  }
+
+  const res = await fetch(`${apiPath}works`, {
+    method: "POST",
+    body,
+    headers: {
+      "Authorization": `Bearer ${token}`, // Inclure le token dans l'en-tête d'autorisation
+    },
+  });
+
+  if (res.status === 401) {
+    logout();
+  }
+}
+
+const deleteWork = async idWork => {
+  if (!token) {
+    logout()
+  }
+
+  const res = await fetch(`${apiPath}works/${idWork}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`, // Inclure le token dans l'en-tête d'autorisation
+    },
+  });
+
+  if (res.status === 401) {
+    logout();
+  }
+}
 
 // Recupération des items dans l'API
 const apiWorks = await fetchWorks()
 
 // Récupération des categories dans l'API
-const reponseCategories = await fetch(`${apiPath}categories`);
-const apiCategories = await reponseCategories.json();
+const apiCategories = await fetchCategories();
 
-const gallerie = document.querySelector(".gallery");
 const modalWorks = document.querySelector(".modal-works");
 
-async function updateGalleryAndModal() {
+function updateWork(container, isModal, apiWork) {
+  const figure = document.createElement("figure");
+  const img = document.createElement("img");
+  const title = document.createElement("figcaption");
+
+  if (isModal) {
+    const trashIcon = document.createElement("i");
+    trashIcon.classList.add("trashicon", "fa-solid", "fa-trash-can");
+    figure.appendChild(trashIcon)
+
+    trashIcon.addEventListener("click", async () => {
+      try {
+        // Envoyer la requête DELETE à l'API pour supprimer l'image
+        await deleteWork(apiWork.id)
+
+        console.log("Image supprimée avec succès !");
+        await buildGalleryAndModal()
+
+      } catch (error) {
+        // Erreur : gestion des erreurs éventuelles
+        console.error("Une erreur s'est produite :", error);
+      }
+    })
+  }
+
+  img.src = apiWork.imageUrl;
+  img.alt = apiWork.title;
+
+  figure.appendChild(img);
+
+  title.innerText = isModal ? "éditer" : apiWork.title;
+
+  figure.appendChild(title);
+  container.appendChild(figure)
+}
+
+async function buildGalleryAndModal(galleryId = null) {
   try {
     // Récupere la liste des items dans l'API
     const apiWorks = await fetchWorks()
 
-    // Met a jour la gallerie
-    affichageGallerie(apiWorks);
+    const gallerie = document.querySelector(".gallery");
+    gallerie.innerHTML = "";
 
     // Met a jour la modal avec les nouvelles données
-    const modalWorks = document.querySelector(".modal-works");
     modalWorks.innerHTML = ""; // Efface le contenu de la modal
 
-    for (let i = 0; i < apiWorks.length; i++) {
-      const figure = document.createElement("figure");
-      const img = document.createElement("img");
-      const title = document.createElement("figcaption");
-      const trashIcon = document.createElement("i");
+    apiWorks.filter(work => {
+      if (galleryId) {
+        return work.category.id === galleryId
+      }
 
-      modalWorks.appendChild(figure);
-
-      img.src = apiWorks[i].imageUrl;
-      img.alt = apiWorks[i].title;
-
-      figure.appendChild(img);
-
-      title.innerText = "éditer";
-
-      figure.appendChild(title);
-      figure.appendChild(trashIcon);
-
-      trashIcon.classList.add("trashicon", "fa-solid", "fa-trash-can");
-      // Ajout du gestionnaire d'événement au clic sur l'icône "trash"
-    }
-
-    modalWorks.querySelectorAll('.trashicon').forEach((trash, i) => {
-      trash.addEventListener("click", async (e) => {
-        e.preventDefault()
-        if (!token) {
-          console.error("Token manquant. Veuillez vous connecter.");
-          return;
-        }
-
-        const imageId = apiWorks[i].id; // Récupération de l'identifiant de l'image à supprimer
-
-        try {
-          // Envoyer la requête DELETE à l'API pour supprimer l'image
-          await deleteWork(imageId)
-
-          console.log("Image supprimée avec succès !");
-          await updateGalleryAndModal()
-
-        } catch (error) {
-          // Erreur : gestion des erreurs éventuelles
-          console.error("Une erreur s'est produite :", error);
-        }
-      });
-    })
+      return true;
+    }).forEach(work => {
+      updateWork(gallerie, false, work)
+      updateWork(modalWorks, true, work)
+    });
   } catch (error) {
     console.error("Error updating gallery and modal:", error);
-  }
-}
-
-
-// Génération des items par défaut de la gallerie
-for (let i = 0; i < apiWorks.length; i++) {
-  const figure = document.createElement("figure");
-  const img = document.createElement("img");
-  const title = document.createElement("figcaption");
-
-  gallerie.appendChild(figure);
-
-  img.src = apiWorks[i].imageUrl;
-  img.alt = apiWorks[i].title;
-
-  figure.appendChild(img);
-
-  title.innerText = apiWorks[i].title;
-
-  figure.appendChild(title);
-}
-// Generation des items pour la modal
-for (let i = 0; i < apiWorks.length; i++) {
-  const figure = document.createElement("figure");
-  const img = document.createElement("img");
-  const title = document.createElement("figcaption");
-  const trashIcon = document.createElement("i"); // Ajout de l'icône "trash"
-  trashIcon.classList.add("trashicon", "fa-solid", "fa-trash-can"); // Ajout des classes pour l'icône trash
-  modalWorks.appendChild(figure);
-
-  img.src = apiWorks[i].imageUrl;
-  img.alt = apiWorks[i].title;
-
-  figure.appendChild(img);
-
-  title.innerText = "éditer";
-
-  figure.appendChild(title);
-  figure.appendChild(trashIcon); // Ajout de l'icône "trash" à la figure
-};
-
-// Fonction de mise à jour de l'affichage de la gallerie
-const affichageGallerie = (itemsCategorie) => {
-  const gallerie = document.querySelector(".gallery");
-  while (gallerie.firstChild) {
-    gallerie.firstChild.remove();
-  }
-
-  for (let i = 0; i < itemsCategorie.length; i++) {
-    const figure = document.createElement("figure");
-    const img = document.createElement("img");
-    const title = document.createElement("figcaption");
-
-    gallerie.appendChild(figure);
-
-    img.src = itemsCategorie[i].imageUrl;
-    img.alt = itemsCategorie[i].title;
-
-    figure.appendChild(img);
-
-    title.innerText = itemsCategorie[i].title;
-
-    figure.appendChild(title);
-  }
-};
-
-const affichageModalWorks = (itemsModal) => {
-  const modalWorks = document.querySelector(".modal-works");
-  while (modalWorks.firstChild) {
-    modalWorks.firstChild.remove();
-  }
-
-  for (let i = 0; i < itemsModal.length; i++) {
-    const figure = document.createElement("figure");
-    const img = document.createElement("img");
-    const title = document.createElement("figcaption");
-    const trashIcon = document.createElement("i"); // Ajout de l'icône "trash"
-    trashIcon.classList.add("trashicon", "fa-solid", "fa-trash-can"); // Ajout des classes pour l'icône trash
-    modalWorks.appendChild(figure);
-
-    img.src = itemsModal[i].imageUrl;
-    img.alt = itemsModal[i].title;
-
-    figure.appendChild(img);
-
-    title.innerText = "éditer";
-
-    figure.appendChild(title);
-    figure.appendChild(trashIcon); // Ajout de l'icône "trash" à la figure
   }
 }
 
@@ -191,66 +130,19 @@ for (let index = 0; index < apiCategories.length; index++) {
   categoriesBtn.classList.add("filter-btn", "id" + apiCategories[index].id);
   categoriesBtn.innerText = apiCategories[index].name;
   divCategories.appendChild(categoriesBtn);
-  boutons[apiCategories[index].name] = document.querySelector(
-    ".id" + apiCategories[index].id
-  );
+
+  categoriesBtn.addEventListener('click', () => {
+    buildGalleryAndModal(apiCategories[index].id);
+  })
 }
 
 const boutonTous = document.querySelector(".id0");
 
 // AddEventListener des boutons de filtres par catégorie
 boutonTous.addEventListener("click", () => {
-  const ancienBoutonActif = document.querySelector(".button-active");
-  if (ancienBoutonActif) {
-    ancienBoutonActif.classList.remove("button-active");
-  }
-  affichageGallerie(apiWorks);
-
-  boutonTous.classList.add("button-active");
+  buildGalleryAndModal();
 });
 
-const boutonObjets = document.querySelector(".id1");
-
-boutonObjets.addEventListener("click", function () {
-  const ancienBoutonActif = document.querySelector(".button-active");
-  if (ancienBoutonActif) {
-    ancienBoutonActif.classList.remove("button-active");
-  }
-
-  const objets = apiWorks.filter(function (apiWorks) {
-    return apiWorks.categoryId === 1;
-  });
-  affichageGallerie(objets);
-  boutonObjets.classList.add("button-active");
-});
-
-const boutonAppartements = document.querySelector(".id2");
-
-boutonAppartements.addEventListener("click", function () {
-  const ancienBoutonActif = document.querySelector(".button-active");
-  if (ancienBoutonActif) {
-    ancienBoutonActif.classList.remove("button-active");
-  }
-  const Appartements = apiWorks.filter(function (apiWorks) {
-    return apiWorks.categoryId === 2;
-  });
-  affichageGallerie(Appartements);
-  boutonAppartements.classList.add("button-active");
-});
-
-const boutonHotelsRestaurants = document.querySelector(".id3");
-
-boutonHotelsRestaurants.addEventListener("click", function () {
-  const ancienBoutonActif = document.querySelector(".button-active");
-  if (ancienBoutonActif) {
-    ancienBoutonActif.classList.remove("button-active");
-  }
-  const hotelsRestos = apiWorks.filter(function (apiWorks) {
-    return apiWorks.categoryId === 3;
-  });
-  affichageGallerie(hotelsRestos);
-  boutonHotelsRestaurants.classList.add("button-active");
-});
 
 const isLogged = Boolean(localStorage.getItem("token"));
 if (isLogged) {
@@ -276,16 +168,26 @@ document.querySelector(".btn-show-modal").addEventListener("click", async (e) =>
   e.preventDefault
   document.querySelector(".modal").classList.add("show");
   document.querySelector("body").style.overflow = "hidden";
-  await updateGalleryAndModal();
+  await buildGalleryAndModal();
 });
 
 // Clique de fermeture de la modal
 document.querySelector(".btn-close-modal").addEventListener("click", () => {
+  // on réinitialise les messages d'erreurs du formulaire de la modal
+  document.getElementById("img-error").innerText = ""
+  document.getElementById("title-error").innerText = ""
+  document.getElementById("category-error").innerText = ""
+
   document.querySelector(".modal").classList.remove("show");
   document.querySelector("body").style.overflow = "auto";
 });
 
 document.querySelector(".modal").addEventListener("click", () => {
+  // on réinitialise les messages d'erreurs du formulaire de la modal
+  document.getElementById("img-error").innerText = ""
+  document.getElementById("title-error").innerText = ""
+  document.getElementById("category-error").innerText = ""
+
   document.querySelector(".modal").classList.remove("show");
   document.querySelector("body").style.overflow = "auto";
 });
@@ -305,6 +207,11 @@ const ctaAjoutBouton = document.getElementById("ctaAjoutBouton");
 const descAjoutPhoto = document.querySelector(".descAjoutPhoto");
 
 document.querySelector(".btn-primary").addEventListener("click", () => {
+  // on réinitialise les messages d'erreurs du formulaire de la modal
+  document.getElementById("img-error").innerText = ""
+  document.getElementById("title-error").innerText = ""
+  document.getElementById("category-error").innerText = ""
+
   const photoAdd = document.querySelector('.photo-add')
   photoAdd.classList.remove("hidden");
   modalWorks.classList.add("hidden");
@@ -348,7 +255,6 @@ document.querySelector(".btn-primary").addEventListener("click", () => {
       labelImgAdd.classList.add("hidden")
       ctaAjoutBouton.style.display = "none";
       descAjoutPhoto.classList.add("hidden")
-      // modalWorkAjoutPhoto.style.padding = "0"
 
       // Mettre à jour la source de l'image de la preview
       imagePreview.src = imageUrl;
@@ -361,6 +267,11 @@ document.querySelector(".btn-primary").addEventListener("click", () => {
 
   // Retour a la page précédente de la modal au clique sur la fleche
   document.querySelector('.btn-back').addEventListener("click", () => {
+    // on réinitialise les messages d'erreurs du formulaire de la modal
+    document.getElementById("img-error").innerText = ""
+    document.getElementById("title-error").innerText = ""
+    document.getElementById("category-error").innerText = ""
+
     document.getElementById("title").value = ""
     document.getElementById("file").value = ""
 
@@ -392,7 +303,7 @@ document.querySelector(".btn-primary").addEventListener("click", () => {
 
   function toggleValiderButton() {
     const btnValider = document.querySelector(".btn-valider");
-    btnValider.disabled = !isFormValid();
+    // btnValider.disabled = !isFormValid();
     btnValider.style.backgroundColor = isFormValid() ? "#1d6154" : ""; // Utilisez la couleur grise quand le bouton est désactivé
   }
 
@@ -409,39 +320,65 @@ document.querySelector(".btn-primary").addEventListener("click", () => {
 
   document.getElementById('formAjoutPhoto').addEventListener("submit", async (event) => {
     event.preventDefault(); // Empêche la soumission réelle du formulaire
-    // Vérifier si le token est présent dans le localStorage
 
-    if (!token) {
-      console.error("Token manquant. Veuillez vous connecter.");
-      return false; // Arrêter le traitement si le token est manquant
+    // Vérification de la validité du formulaire
+    if (isFormValid()) {
+
+      // Vérifier si le token est présent dans le localStorage
+      if (!token) {
+        console.error("Token manquant. Veuillez vous connecter.");
+        return false; // Arrêter le traitement si le token est manquant
+      }
+
+      // Récupérer les valeurs saisies par l'utilisateur
+      const titre = document.getElementById("title");
+      const categorie = document.getElementById("choix");
+      const image = document.getElementById("file"); // Le fichier sélectionné par l'utilisateur
+
+      // Créer un objet avec les données du formulaire
+      const formData = new FormData();
+      formData.append("image", image.files[0]);
+      formData.append("title", titre.value);
+      formData.append("category", categorie.value);
+
+      // Envoyer les données du formulaire à l'API en utilisant la méthode POST
+      try {
+        await addWork(formData)
+
+        console.log("Données envoyées avec succès !");
+
+        await buildGalleryAndModal();
+
+        document.querySelector('.btn-back').click();
+      } catch (error) {
+        console.error("Une erreur s'est produite :", error);
+      }
+
+      return false;
     }
 
-    // Récupérer les valeurs saisies par l'utilisateur
-    const titre = document.getElementById("title");
-    const categorie = document.getElementById("choix");
-    const image = document.getElementById("file"); // Le fichier sélectionné par l'utilisateur
 
-    // Créer un objet avec les données du formulaire
-    const formData = new FormData();
-    formData.append("image", image.files[0]);
-    formData.append("title", titre.value);
-    formData.append("category", categorie.value);
-    // Envoyer les données du formulaire à l'API en utilisant la méthode POST
-    try {
-      await addWork(formData)
+    // Si le formulaire n'est pas valide
+    else {
+      const titre = document.getElementById("title").value;
+      const categorie = document.getElementById("choix").value;
+      const imageInput = document.getElementById("file");
+      const selectedFile = imageInput.files[0];
 
-      console.log("Données envoyées avec succès !");
-
-      await updateGalleryAndModal();
-
-      document.querySelector('.btn-back').click();
-    } catch (error) {
-      console.error("Une erreur s'est produite :", error);
+      if (!selectedFile) {
+        document.getElementById("img-error").innerText = "Veuillez ajouter une image."
+      }
+      else if (titre.trim() === "") {
+        document.getElementById("title-error").innerText = "Veuillez ajouter un titre."
+      }
+      else if (categorie === "") {
+        document.getElementById("category-error").innerText = "Veuillez sélectionner une catégorie."
+      }
+      return
     }
-
-    return false;
   });
 
 
 });
 
+buildGalleryAndModal();

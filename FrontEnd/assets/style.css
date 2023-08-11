@@ -671,3 +671,10 @@ figure i {
 .contact {
   display: none;
 }
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 15px;
+}

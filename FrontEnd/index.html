@@ -164,7 +164,7 @@
                 >
                 <input
                   type="file"
-                  class="fileinput hidden"
+                  class="fileinput validate hidden"
                   id="file"
                   name="file"
                 />
@@ -176,10 +176,18 @@
                   class="preview-image"
                 />
               </div>
+              <p class="error-message" id="img-error"></p>
               <label for="title" class="label">Titre</label>
-              <input type="text" class="labelModal" id="title" name="title" />
+              <input
+                type="text"
+                class="labelModal validate"
+                id="title"
+                name="title"
+              />
+              <p class="error-message" id="title-error"></p>
               <label for="choix">Catégorie</label>
-              <select name="choix" id="choix"></select>
+              <select name="choix" id="choix" class="validate"></select>
+              <p class="error-message" id="category-error"></p>
               <hr class="hrForm" />
               <button type="submit" class="btn-valider">Valider</button>
             </form>
