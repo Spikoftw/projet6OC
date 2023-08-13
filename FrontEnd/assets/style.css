@@ -352,6 +352,10 @@ footer nav ul {
 
 /* Page de login */
 
+.headerLogin {
+  margin: 50px;
+}
+
 .header-loginpage {
   color: #000;
   text-align: center;
@@ -360,6 +364,16 @@ footer nav ul {
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+}
+
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logininput {
+  width: 400px;
 }
 
 .hidden {
@@ -391,10 +405,6 @@ footer nav ul {
   border-radius: 10px;
   /* width: 60%; */
   width: 800px;
-}
-
-.modal-wrapper h3 {
-  margin-bottom: 46px;
 }
 
 .modal-wrapper hr {
@@ -436,6 +446,7 @@ footer nav ul {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-height: 800px;
 }
 
 .modal .btn-close-modal {
@@ -677,4 +688,13 @@ figure i {
   margin-top: 10px;
   text-align: center;
   font-size: 15px;
+}
+
+.modal-title-form {
+  margin-bottom: -20px;
+  margin-top: 75px;
+}
+
+.modal-title {
+  margin-bottom: 46px;
 }

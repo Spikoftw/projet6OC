@@ -15,7 +15,7 @@
     <script type="module" src="./login.js" defer></script>
   </head>
   <body>
-    <header>
+    <header class="headerLogin">
       <h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
       <nav>
         <ul>
@@ -31,9 +31,21 @@
         <h2>Log in</h2>
         <form id="loginForm" action="#" method="post">
           <label for="email">E-mail</label>
-          <input type="email" name="email" id="email" required />
+          <input
+            class="logininput"
+            type="email"
+            name="email"
+            id="email"
+            required
+          />
           <label for="password">Mot de passe</label>
-          <input type="password" name="password" id="password" required />
+          <input
+            class="logininput"
+            type="password"
+            name="password"
+            id="password"
+            required
+          />
           <div id="errorMessage"></div>
           <input type="submit" value="Se connecter" />
           <a class="forgetpassword" href="#">Mot de passe oublié</a>

@@ -262,11 +262,14 @@ inputImage.addEventListener("change", (e) => {
   toggleValiderButton();
 });
 
+const modalTitle = document.getElementById("modalTitle")
+
 // Retour a la page précédente de la modal au clique sur la fleche
 document.querySelector('.btn-back').addEventListener("click", () => {
   // on réinitialise les messages d'erreurs du formulaire de la modal
   resetForm()
-
+  modalTitle.classList.remove("modal-title-form")
+  modalTitle.classList.add("modal-title")
   imagePreview.classList.add("hidden")
   svgImg.classList.remove("hidden")
   labelImgAdd.classList.remove("hidden")
@@ -281,6 +284,7 @@ document.querySelector('.btn-back').addEventListener("click", () => {
   modalWorks.style.gridTemplateColumns = "1fr 1fr 1fr 1fr 1fr";
   document.querySelector('.btn-back').classList.add('hidden');
   document.querySelector(".btn-delete-gallery").style.display = "inherit";
+  modalTitle.innerText = "Gallerie photo";
 });
 
 // Vérification du remplissage du formulaire
@@ -365,7 +369,9 @@ btnAjoutPhoto.addEventListener("click", () => {
   photoAdd.classList.remove("hidden");
   modalWorks.classList.add("hidden");
   btnAjoutPhoto.classList.add("hidden");
-  document.querySelector(".modal-title").innerText = "Ajout photo";
+  modalTitle.innerText = "Ajout photo";
+  modalTitle.classList.add("modal-title-form")
+  modalTitle.classList.remove("modal-title")
   document.querySelector(".btn-delete-gallery").style.display = "none";
 
   document.querySelector('.btn-back').classList.remove("hidden");
